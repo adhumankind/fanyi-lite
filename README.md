@@ -13,11 +13,24 @@
 - **交互单元保真**：按钮、导航、标题链接翻译后保留原样式与点击行为；SVG 图标不丢失
 - **多语种互译**：英/日/韩/俄/法/德/西/阿拉伯/希伯来/泰/印地等
 
-## 📦 安装（开发者模式）
+## 📦 安装
 
-1. 下载本仓库 `fanyi-lite/` 目录
-2. Chrome 打开 `chrome://extensions/` → 开启「开发者模式」
-3. 「加载已解压的扩展程序」→ 选择 `fanyi-lite/` 目录
+### 🙋 普通用户（下载即用，不需要会 Git）
+
+1. 打开 [**Releases 发布页**](https://github.com/adhumankind/fanyi-lite/releases/latest)，在 Assets 里点击下载 `fanyi-lite-vX.X.X.zip`
+2. 右键解压到一个**长期保留**的文件夹（例如 `D:\fanyi-lite`，删除会导致扩展失效）
+3. 打开 Chrome，地址栏输入 `chrome://extensions/` 回车，打开右上角的「**开发者模式**」开关
+4. 点击左上角「**加载已解压的扩展程序**」，选择刚解压出来的文件夹（里面能看到 `manifest.json` 的那一层）
+5. 在工具栏拼图 🧩 菜单里把本扩展 **📌 固定**，打开任意外文网页按 **Alt+1** —— 翻译完成！
+
+> 小提示：开发者模式加载的扩展，Windows 上每次启动 Chrome 可能会弹一次「是否停用开发者模式扩展程序」，点「取消」即可继续使用；等本扩展通过 Chrome 商店审核后，从商店一键安装就没有这个提示，还会自动更新。
+
+### 🛠 开发者（Git）
+
+```bash
+git clone https://github.com/adhumankind/fanyi-lite.git
+# Chrome → chrome://extensions/ → 开发者模式 → 加载已解压的扩展程序 → 选 fanyi-lite/ 目录
+```
 
 ## 🧪 测试
 
@@ -32,7 +45,6 @@ node test-dedup.js        # 12 套测试之一：其余见根目录 test-*.js，
 ```
 fanyi-lite/   扩展本体（加载此目录即可使用）
 test-*.js     12 套自动化测试（零依赖，node 直接跑）
-dist/         商店截图与上架包
 ```
 
 ## 🔒 隐私

@@ -7,8 +7,8 @@
 ext/
 调研报告.md
 
-# 打包/发布产物（审核通过后本就公开，但无需入库）
-dist/*.zip
+# 打包/发布产物（商店包挂 GitHub Release、截图在商店页，仓库不留副本；dist/ 仅存本地）
+dist/
 
 # 调试图杂物（保留 store-*.png 与演示页）
 screenshots/_bug_*.png
