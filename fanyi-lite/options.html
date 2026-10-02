@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>宇宙无敌超级霹雳便捷的网页翻译工具 — 设置</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+      background: #f7f4ed;
+      color: #2e1d13;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      width: 100%;
+      max-width: 680px;
+      background: #ffffff;
+      border: 1px solid rgba(180, 83, 9, 0.16);
+      border-radius: 12px;
+      padding: 32px 36px;
+      box-shadow: 0 4px 20px rgba(46, 29, 19, 0.05);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(180, 83, 9, 0.12);
+      margin-bottom: 24px;
+    }
+    .header img { width: 44px; height: 44px; }
+    .header h1 { font-size: 19px; color: #2e1d13; font-weight: 700; }
+    .author-tag {
+      font-size: 11px;
+      color: #b45309;
+      background: rgba(245, 158, 11, 0.12);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-top: 3px;
+      display: inline-block;
+    }
+
+    .form-group { margin-bottom: 26px; }
+    .form-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2e1d13;
+      margin-bottom: 4px;
+    }
+    .form-desc {
+      font-size: 12.5px;
+      color: #785943;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    /* 策略单选栏 */
+    .strategy-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .strategy-label {
+      flex: 1;
+      min-width: 170px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: #faf7f2;
+      border: 1px solid rgba(180, 83, 9, 0.2);
+      border-radius: 6px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #2e1d13;
+      transition: all 0.15s ease;
+    }
+    .strategy-label:hover {
+      border-color: #d97706;
+      background: #ffffff;
+    }
+    .strategy-label.active {
+      border-color: #b45309;
+      background: rgba(245, 158, 11, 0.12);
+      color: #78350f;
+      font-weight: 600;
+    }
+    .strategy-label input { accent-color: #b45309; }
+
+    /* 服务引擎状态卡 */
+    .provider-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .provider-card {
+      border: 1px solid rgba(180, 83, 9, 0.18);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: #fdfbf7;
+    }
+    .provider-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2e1d13;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .provider-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .status-unknown { color: #6b7280; background: #f3f4f6; }
+    .status-ok { color: #15803d; background: #dcfce7; }
+    .status-fail { color: #b91c1c; background: #fee2e2; }
+    .provider-card p {
+      font-size: 11.5px;
+      color: #785943;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: box-shadow 0.15s ease;
+    }
+    .btn-action:hover { box-shadow: 0 4px 12px rgba(180, 83, 9, 0.28); }
+    .btn-action:disabled { opacity: 0.6; cursor: wait; }
+
+    /* 术语表编辑器 */
+    .glossary-editor {
+      width: 100%;
+      min-height: 160px;
+      border: 1px solid rgba(180, 83, 9, 0.22);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: "SF Mono", Consolas, "Courier New", monospace;
+      font-size: 12.5px;
+      line-height: 1.8;
+      color: #2e1d13;
+      background: #fdfbf7;
+      resize: vertical;
+    }
+    .glossary-editor:focus {
+      outline: none;
+      border-color: #b45309;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+    }
+    .glossary-status {
+      font-size: 12px;
+      color: #15803d;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .tip-box {
+      margin-top: 8px;
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 3px solid #b45309;
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: #78350f;
+      line-height: 1.6;
+    }
+    .tip-box code {
+      background: rgba(180, 83, 9, 0.1);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 11.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="header">
+      <img src="icons/active-128.png" alt="logo">
+      <div>
+        <h1>宇宙无敌超级霹雳便捷的网页翻译工具</h1>
+        <div class="author-tag">作者：阿帝 · 多语种 · 行业术语库 · 双引擎互备</div>
+      </div>
+    </div>
+
+    <!-- 快捷键 -->
+    <div class="form-group">
+      <div class="form-title">⚡ 全文翻译快捷键</div>
+      <div class="form-desc">
+        默认快捷键为 <strong>Alt+1</strong>，在任意多语言页面按下即可开启全文翻译，再按一次一键还原。
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; background:#faf7f2; border:1px solid rgba(180,83,9,0.14); padding:14px 18px; border-radius:8px;">
+        <div>
+          <span style="font-size:13px; font-weight:500;">当前全局快捷键：</span>
+          <span class="key-badge" id="currentShortcut" style="background:#fff;border:1px solid #d97706;color:#b45309;font-family:monospace;font-size:13px;font-weight:700;padding:4px 10px;border-radius:6px;">Alt+1</span>
+        </div>
+        <button id="btnOpenChromeShortcuts" class="btn-action">修改自定义按键 ↗</button>
+      </div>
+    </div>
+
+    <!-- 翻译服务引擎 -->
+    <div class="form-group">
+      <div class="form-title">🌐 翻译服务引擎（国内外网络互备）</div>
+      <div class="form-desc">
+        默认「智能互备模式」：优先使用 Google 免费接口，网络不可达时自动无缝降级至国内极速直连通道（免翻墙 100% 可达），用户零感知。
+      </div>
+
+      <!-- 引擎策略选择 -->
+      <div class="strategy-bar">
+        <label class="strategy-label active" id="lblStrategyAuto">
+          <input type="radio" name="serviceStrategy" value="auto" checked>
+          <span>🟢 智能互备 (推荐)</span>
+        </label>
+        <label class="strategy-label" id="lblStrategyDomestic">
+          <input type="radio" name="serviceStrategy" value="domestic">
+          <span>🔵 仅国内极速直连 (免翻墙100%可达)</span>
+        </label>
+        <label class="strategy-label" id="lblStrategyGg">
+          <input type="radio" name="serviceStrategy" value="google">
+          <span>🟠 仅 Google 免费接口</span>
+        </label>
+      </div>
+
+      <div class="provider-grid">
+        <div class="provider-card">
+          <h4>Google 免费接口 <span id="stGoogle" class="provider-status status-unknown">待检测</span></h4>
+          <p>外网/代理环境下速度最佳，作为智能模式首选引擎。</p>
+        </div>
+        <div class="provider-card">
+          <h4>国内极速直连通道 <span id="stDomestic" class="provider-status status-unknown">待检测</span></h4>
+          <p>免密钥开放直连网络，国内免翻墙 100% 秒级直连，作为核心备用/直连引擎。</p>
+        </div>
+      </div>
+
+      <button id="btnTestProviders" class="btn-action">🔍 检测引擎连通性</button>
+    </div>
+
+    <!-- 自定义术语表 -->
+    <div class="form-group">
+      <div class="form-title">📚 自定义专业术语表</div>
+      <div class="form-desc">
+        每行一条，格式为 <code>原文: 中文</code> 或 <code>原文：中文</code>（也兼容 <code>=</code>）。命中术语将以你的译名统一输出，
+        优先级高于内置行业词库。
+      </div>
+      <textarea id="glossaryEditor" class="glossary-editor" spellcheck="false"
+        placeholder="# 示例：
+me: 我
+API: 应用程序接口
+Kubernetes: 容器编排平台
+Transformer: 深度学习神经网络架构
+prompt: 提示词"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
+        <button id="btnSaveGlossary" class="btn-action">💾 保存术语表</button>
+        <span id="glossaryStatus" class="glossary-status"></span>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>💡 使用提示：</strong><br>
+      · 行业词库会根据当前网站自动匹配（GitHub/Stack Overflow → 技术词库，arXiv/Nature → 学术词库……），也可在弹出面板手动指定；<br>
+      · 术语保护引擎会在过机前将命中词替换为内部记号，译回后还原为你的官方译名，免费接口也能获得术语一致的专业译文。
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

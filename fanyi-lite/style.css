@@ -1,0 +1,306 @@
+/* ==========================================================================
+   宇宙无敌超级霹雳便捷的网页翻译工具 — 美拉德美学排版系统
+   作者：阿帝
+   核心美学理念：干净留白、极致阅读舒适度、温润高级的焦糖暖茶色调、自适应布局保护
+   ========================================================================== */
+
+:root {
+  /* 美拉德核心色彩令牌 (Maillard Color Tokens) */
+  --fy-maillard-espresso: #2e1d13;       /* 深茶浓缩褐：浅色底上的极致可读正文色 (WCAG AAA > 12:1) */
+  --fy-maillard-mocha: #4a3425;          /* 醇厚摩卡：次级正文 */
+  --fy-maillard-amber: #b45309;          /* 琥珀焦糖：重点标识与左侧微装饰条 */
+  --fy-maillard-amber-light: #d97706;    /* 亮焦糖暖金：渐变高光 */
+  --fy-maillard-caramel-soft: rgba(180, 83, 9, 0.12); /* 焦糖微柔边线 */
+  --fy-maillard-cream-bg: rgba(251, 247, 242, 0.88);  /* 奶杏暖温底色 */
+
+  /* 深色模式令牌 (Dark Mode Adaptive Tokens) */
+  --fy-maillard-dark-text: #fdf8f2;      /* 高透亮暖奶白：深色底上达到 WCAG AAA 13:1+ 极致清晰可读 */
+  --fy-maillard-dark-sub: #edd6c2;       /* 浅暖杏焦糖：深色模式次级文字 */
+  --fy-maillard-dark-amber: #f59e0b;     /* 明亮暖金琥珀：深色模式左侧装饰条 */
+  --fy-maillard-dark-border: rgba(245, 158, 11, 0.28);
+
+  /* 排版与留白微调 */
+  --fy-spacing-top: 6px;
+  --fy-spacing-bottom: 9px;
+  --fy-line-height: 1.68;
+  --fy-letter-spacing: 0.015em;
+  --fy-font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC",
+    system-ui, sans-serif;
+}
+
+/* ================= 1. 译文主容器 (Isolated Wrapper) ================= */
+
+/*
+ * 字体形态（字号/字重/字体/行高/字距/对齐）由 content.js applyHostFontStyles
+ * 以 inline style 直拷宿主计算值——CSS 不设字体属性，避免 em 相对值/继承链
+ * 造成"大标题译文变小字"类事故；inline 样式也会被 rearrange/reapply 按模式刷新。
+ * CSS 层只负责：布局骨架、跟随模式的美拉德注释色与立柱。
+ */
+font.fanyi-lite-target {
+  display: block !important;
+  position: relative !important;
+  margin: var(--fy-spacing-top) 0 var(--fy-spacing-bottom) 0 !important;
+  padding: 2px 0 2px 10px !important;
+  border: none !important;
+  border-left: 2px solid var(--fy-maillard-amber-light) !important; /* 实色琥珀立柱：渐变 border-image 在 flex/窄元素会渲染成孤立竖条 */
+  background: transparent !important;
+  text-indent: 0 !important;
+  white-space: normal !important;
+  box-sizing: border-box !important;
+  unicode-bidi: plaintext !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  animation: fy-maillard-fade-in 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+
+  /* 【关键排版修复 1】：在 Flex/Grid 布局中强制占据 100% 宽度，换行排列，彻底杜绝单字被挤成一列的竖排缺陷！ */
+  flex-basis: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: auto !important;
+  clear: both !important;
+  writing-mode: horizontal-tb !important;
+}
+
+/* 跟随模式（默认）：美拉德琥珀立柱 + 次级注释色。
+   交互单元（fy-btn-ctx，按钮/独立链接）排除在外——其中的译文颜色由
+   applyHostFontStyles inline 直拷宿主（按钮里的中文必须与英文同色）。 */
+:root:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx) {
+  color: var(--fy-maillard-espresso) !important;
+  border-left: 2px solid var(--fy-maillard-amber-light) !important;
+}
+:root[data-fy-mode="follow"] font.fanyi-lite-target:not(.fy-btn-ctx) {
+  color: var(--fy-maillard-espresso) !important;
+  border-left: 2px solid var(--fy-maillard-amber-light) !important;
+}
+
+/* 译文内部文本承载 span：形态随 inline 容器，不覆盖 */
+font.fanyi-lite-target > .fanyi-lite-inner {
+  display: block !important;
+}
+
+/* ================= 2. 深度适配深色按钮与特殊上下文 (Context Adaptation) ================= */
+
+/* 【关键排版修复 2】：在黑色/深色胶囊按钮及深色背景容器中自适应透亮暖奶白，杜绝文字隐身（仅跟随模式） */
+:root:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target.fy-dark-ctx:not(.fy-btn-ctx) {
+  color: var(--fy-maillard-dark-text) !important;
+  border-left-color: #f59e0b !important;
+}
+
+/* 按钮内部紧凑排版：去除粗重立柱，采用优雅微距与极细暖金中线 */
+font.fanyi-lite-target.fy-btn-ctx {
+  display: inline-flex !important;
+  margin: 0 0 0 8px !important;
+  padding: 0 0 0 8px !important;
+  border-left: 1.5px solid rgba(245, 158, 11, 0.45) !important;
+  vertical-align: middle !important;
+  flex-basis: auto !important;
+}
+font.fanyi-lite-target.fy-btn-ctx > .fanyi-lite-inner {
+  display: inline !important;
+}
+
+/* 列表项 (LI) 内的译文：收敛间距与微缩进，避免列表标志错乱 */
+li > font.fanyi-lite-target {
+  margin-top: 4px !important;
+  margin-bottom: 3px !important;
+  padding-left: 8px !important;
+}
+
+/* 表格单元格 (TD/TH) 内的译文：去除左边线，增加细致虚点分割，保持表格紧凑度 */
+td > font.fanyi-lite-target,
+th > font.fanyi-lite-target {
+  margin: 4px 0 2px 0 !important;
+  padding: 4px 0 0 0 !important;
+  border-left: none !important;
+  border-top: 1px dashed var(--fy-maillard-caramel-soft) !important;
+}
+
+/* 标题 (H1~H6) 后的译文：仅保留呼吸间距（字体形态由 inline style 决定，CSS 不再干预） */
+h1 + font.fanyi-lite-target,
+h2 + font.fanyi-lite-target,
+h3 + font.fanyi-lite-target,
+h4 + font.fanyi-lite-target,
+h5 + font.fanyi-lite-target,
+h6 + font.fanyi-lite-target {
+  margin-top: 4px !important;
+  margin-bottom: 12px !important;
+}
+
+/* 行内小标签场景（字号等字体形态由 inline style 直控，此处只管布局与装饰）。
+   顺序语义（刻意放在 .fy-btn-ctx 之后）：独立链接同时命中两个类时，本规则胜出——
+   处于普通文档流的行内链接用"底部暖金细线"更贴文风；只有处于 flex/块级上下文
+   （计算 display 非 inline 开头，不会加 fy-inline）的按钮/胶囊才走 fy-btn-ctx 中线。 */
+font.fanyi-lite-target.fy-inline {
+  display: inline-block !important;
+  margin: 0 4px !important;
+  padding: 0 4px !important;
+  border-left: none !important;
+  border-bottom: 1px solid var(--fy-maillard-amber) !important;
+  flex-basis: auto !important;
+}
+:root[data-fy-mode="replace"] font.fanyi-lite-target.fy-inline,
+:root[data-fy-mode="invert"] font.fanyi-lite-target.fy-inline {
+  border-bottom: none !important;
+}
+font.fanyi-lite-target.fy-inline > .fanyi-lite-inner {
+  display: inline !important;
+}
+
+/* ================= 3. 三大呈现模式驱动系统 (Mode Switching) ================= */
+
+/* 原文被包裹容器。
+   注意：此处【禁止】加 transition——render() 内 isDarkContainer 会强制一次样式重算，
+   此时 span 尚只有基类（invert 下=注释态初值），随后才追加 fy-dark-ctx/fy-btn-src 与
+   inline 字号；任何 transition 都会把这瞬间的中间态作为动画起点，导致初始渲染闪烁
+   （大字号 mocha 闪一下）与无帧环境（headless 测量）下计算样式冻结在起点。 */
+.fanyi-lite-source {
+}
+
+/* -------------------------------------------------------------
+   模式二：【译文替换】(Replace Mode)
+   译文字号/字重/颜色/行高等字体形态由 content.js applyHostFontStyles
+   以 inline style 100% 复制宿主（CSS inherit 会继承错父级，见 content.js 注释）；
+   CSS 层仅负责剥除注释特征（立柱/缩进/背景），让译文像页面原生中文。
+   ------------------------------------------------------------- */
+html[data-fy-mode="replace"] .fanyi-lite-source {
+  display: none !important;
+}
+
+html[data-fy-mode="replace"] font.fanyi-lite-target {
+  border: none !important;
+  border-left: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex-basis: auto !important;
+}
+
+/* 空壳塌陷消除：仅剩被隐藏原文的容器一并隐藏，消除多余空白条 */
+html[data-fy-mode="replace"] :has(> .fanyi-lite-source:only-child) {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------
+   模式三：【原文跟随】(Invert Mode)
+   译文=宿主主样式（inline style 已复制）；原文对称穿上美拉德注释样式
+   （0.85em 次级字号 + 摩卡褐 + 琥珀微立柱）。主客对称置换。
+   ------------------------------------------------------------- */
+
+/* 交互单元排除：按钮/独立链接在 invert 下保留紧凑中线与间距（中英之间有分隔线） */
+html[data-fy-mode="invert"] font.fanyi-lite-target:not(.fy-btn-ctx) {
+  border: none !important;
+  border-left: none !important;
+  padding: 0 !important;
+  margin: 0 0 3px 0 !important;
+  background: transparent !important;
+  flex-basis: auto !important;
+}
+
+/* 原文（英文退为辅助配角）：美拉德注释样式。
+   字号由 content.js applySourceAnnotationStyle 按【父级上下文字号】inline 直控
+   （历史上用 0.85em 相对宿主自身，导致 34px 大标题里的原文注释变成 28.9px 巨型注释）。
+   fy-btn-src（按钮/独立链接内的原文）排除注释化——按钮里的英文必须保持原生可读。 */
+html[data-fy-mode="invert"] .fanyi-lite-source:not(.fy-btn-src) {
+  display: block !important;
+  margin-top: 4px !important;
+  margin-bottom: 6px !important;
+  padding: 1px 0 1px 8px !important;
+  border-left: 2px solid rgba(180, 83, 9, 0.42) !important; /* 琥珀微立柱对称转移到原文身上 */
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  color: var(--fy-maillard-mocha) !important;
+  opacity: 0.72 !important;
+}
+
+/* 深色页面上的原文注释：JS 判定宿主为深底时加 fy-dark-ctx，反转为暖奶白（不依赖站点暗色标记） */
+html[data-fy-mode="invert"] .fanyi-lite-source.fy-dark-ctx:not(.fy-btn-src) {
+  color: var(--fy-maillard-dark-sub) !important;
+  border-left-color: rgba(245, 158, 11, 0.45) !important;
+}
+
+/* 原文跟随模式在深色背景/暗色模式下的对称自适应 */
+@media (prefers-color-scheme: dark) {
+  html[data-fy-mode="invert"] .fanyi-lite-source:not(.fy-btn-src) {
+    color: var(--fy-maillard-dark-sub) !important;
+    border-left-color: rgba(245, 158, 11, 0.45) !important;
+  }
+}
+
+html[class*="dark"] [data-fy-mode="invert"] .fanyi-lite-source:not(.fy-btn-src),
+html[data-theme="dark"] [data-fy-mode="invert"] .fanyi-lite-source:not(.fy-btn-src),
+[data-theme="dark"] html[data-fy-mode="invert"] .fanyi-lite-source:not(.fy-btn-src) {
+  color: var(--fy-maillard-dark-sub) !important;
+  border-left-color: rgba(245, 158, 11, 0.45) !important;
+}
+
+/* ================= 4. 翻译状态与动态反馈 ================= */
+
+@keyframes fy-maillard-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 模式切换 DOM 重排期间抑制入场动画（防止全页译文集体重放闪动） */
+html.fy-rearranging font.fanyi-lite-target,
+html.fy-rearranging font.fanyi-lite-target > .fanyi-lite-inner {
+  animation: none !important;
+}
+
+/* 翻译中状态：美拉德暖琥珀呼吸韵律 */
+html[data-fy-state="translating"] font.fanyi-lite-target > .fanyi-lite-inner {
+  opacity: 0.7;
+  animation: fy-maillard-pulse 1.4s ease-in-out infinite !important;
+}
+
+@keyframes fy-maillard-pulse {
+  0%, 100% {
+    opacity: 0.45;
+    filter: blur(0.2px);
+  }
+  50% {
+    opacity: 0.95;
+    filter: blur(0);
+  }
+}
+
+/* ================= 5. 全局深色模式自适应（仅跟随模式） ================= */
+/*
+ * 深色注释规则一律限定 :not([data-fy-mode="replace"]):not([data-fy-mode="invert"])：
+ * CSS !important 会压过 inline style——replace/invert 模式下颜色必须由
+ * applyHostFontStyles 的 inline 复制直控（黑底白字/彩底彩字），否则深色规则
+ * 会把译文强改成暖奶白导致深底上错色甚至隐身。
+ */
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx) {
+    color: var(--fy-maillard-dark-text) !important;
+    border-left-color: var(--fy-maillard-dark-amber) !important;
+  }
+
+  html:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) h1 + font.fanyi-lite-target:not(.fy-btn-ctx),
+  html:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) h2 + font.fanyi-lite-target:not(.fy-btn-ctx),
+  html:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) h3 + font.fanyi-lite-target:not(.fy-btn-ctx),
+  html:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) h4 + font.fanyi-lite-target:not(.fy-btn-ctx) {
+    color: var(--fy-maillard-dark-sub) !important;
+  }
+}
+
+html[class*="dark"]:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx),
+body[class*="dark"]:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx),
+html[data-theme="dark"]:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx),
+body[data-theme="dark"]:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx),
+[data-theme="dark"]:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx),
+[data-color-mode="dark"]:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx),
+[data-night-mode="true"]:not([data-fy-mode="replace"]):not([data-fy-mode="invert"]) font.fanyi-lite-target:not(.fy-btn-ctx) {
+  color: var(--fy-maillard-dark-text) !important;
+  border-left-color: var(--fy-maillard-dark-amber) !important;
+}

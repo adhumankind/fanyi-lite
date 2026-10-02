@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "宇宙无敌超级霹雳便捷的网页翻译工具",
+  "description": "作者：阿帝。多语种全文智能互译，内置8大行业术语库与自定义术语表实现专业级翻译；Google与国内极速直连双引擎自动降级，国内外网络均可流畅使用；美拉德画廊级双语排版，支持译文跟随/替换/原文跟随三种模式。",
+  "version": "0.8.7",
+  "author": "阿帝",
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "宇宙无敌超级霹雳便捷的网页翻译工具 (Alt+1)",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "options_page": "options.html",
+  "commands": {
+    "toggle-translate": {
+      "suggested_key": { "default": "Alt+1" },
+      "description": "切换全文翻译"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["style.css"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-fy-mode="follow">
+<head>
+<meta charset="UTF-8">
+<title>DeepMind 结构复刻 · 三模式验收</title>
+<link rel="stylesheet" href="../fanyi-lite/style.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Google Sans", Roboto, Arial, sans-serif; background: #fff; color: #202124; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid #e8eaed; }
+  .brand { font-size: 15px; font-weight: 600; }
+  .nav { display: flex; gap: 22px; font-size: 13.5px; color: #3c4043; }
+  .top-actions { display: flex; gap: 10px; }
+  .chip { font-size: 12.5px; padding: 6px 14px; border-radius: 999px; border: 1px solid #dadce0; color: #1f1f1f; }
+  .chip.primary { background: #0b57d0; color: #fff; border-color: #0b57d0; }
+
+  .hero { display: flex; flex-direction: column; align-items: center; padding: 56px 20px 40px; }
+  .eyebrow { font-size: 14px; color: #5f6368; }
+  .hero-title {
+    font-size: 44px; font-weight: 700; line-height: 1.15; text-align: center;
+    max-width: 760px; margin-top: 10px; color: #202124;
+    display: flex; flex-wrap: wrap; justify-content: center;
+  }
+  .btn-row { display: flex; gap: 12px; margin-top: 30px; }
+  .btn { display: flex; align-items: center; padding: 10px 24px; border-radius: 999px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .btn-dark { background: #202124; color: #ffffff; }
+  .btn-light { background: #f0f4f9; color: #1f1f1f; }
+
+  section { max-width: 780px; margin: 48px auto; padding: 0 20px; }
+  h2 { font-size: 28px; font-weight: 500; color: #202124; margin-bottom: 8px; }
+  p.body, li.body { font-size: 15px; line-height: 1.7; color: #3c4043; margin: 14px 0; }
+  ul { padding-left: 22px; }
+
+  .mode-bar { position: sticky; top: 0; z-index: 99; display: flex; gap: 10px; justify-content: center; padding: 10px; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #e8eaed; }
+  .mode-btn { font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px; border: 1px solid #d9c8b4; background: #f4efe6; color: #5c4333; cursor: pointer; }
+  .mode-btn.active { background: #b45309; color: #fff; border-color: #b45309; }
+  .caption { text-align: center; font-size: 12px; color: #8c6f5c; padding: 6px 0 14px; }
+</style>
+</head>
+<body>
+
+<div class="mode-bar">
+  <button class="mode-btn active" onclick="setMode('follow', this)">① 译文跟随</button>
+  <button class="mode-btn" onclick="setMode('replace', this)">② 译文替换</button>
+  <button class="mode-btn" onclick="setMode('invert', this)">③ 原文跟随</button>
+</div>
+<div class="caption" id="modeCaption">译文跟随：原文保留，美拉德译文紧随其下</div>
+
+<div class="topbar">
+  <div class="brand" data-fy-p="1"><span class="fanyi-lite-source">Google DeepMind</span></div>
+  <div class="nav" data-fy-p="1"><span class="fanyi-lite-source">Models &nbsp; Research &nbsp; Science &nbsp; About</span></div>
+  <div class="top-actions">
+    <a class="chip" href="/build" data-fy-p="1"><span class="fanyi-lite-source">Build with Gemini</span></a>
+    <a class="chip primary" href="/try" data-fy-p="1"><span class="fanyi-lite-source">✦ Try Gemini</span></a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="eyebrow" data-fy-p="1"><span class="fanyi-lite-source">About Google DeepMind</span></div>
+  <h1 class="hero-title" data-fy-p="1">
+    <span class="fanyi-lite-source">Our mission is to build AI responsibly to benefit humanity</span>
+  </h1>
+  <div class="btn-row">
+    <div class="btn btn-dark" data-fy-p="1"><span class="fanyi-lite-source">Our vision</span></div>
+    <div class="btn btn-light" data-fy-p="1"><span class="fanyi-lite-source">Our journey</span></div>
+  </div>
+</div>
+
+<section>
+  <h2 data-fy-p="1"><span class="fanyi-lite-source">Our vision</span></h2>
+  <p class="body" data-fy-p="1"><span class="fanyi-lite-source">We live in an exciting time when AI research and technology are delivering extraordinary advances.</span></p>
+  <p class="body" data-fy-p="1"><span class="fanyi-lite-source">In the coming years, AI — and ultimately artificial general intelligence (AGI) — has the potential to drive one of the greatest transformations in history.</span></p>
+  <ul>
+    <li class="body" data-fy-p="1"><span class="fanyi-lite-source">We are a team of scientists, engineers, ethicists and more, working to build the next generation of AI systems safely and responsibly.</span></li>
+    <li class="body" data-fy-p="1"><span class="fanyi-lite-source">By solving some of the hardest scientific and engineering challenges, we're working to create breakthrough technologies.</span></li>
+  </ul>
+</section>
+
+<script>
+  // 模拟 content.js 渲染管线（无网络，静态演示三模式效果）
+  const PAIRS = {
+    "Google DeepMind": "谷歌 DeepMind",
+    "Models &nbsp; Research &nbsp; Science &nbsp; About": "模型 &nbsp; 研究 &nbsp; 科学 &nbsp; 关于",
+    "Build with Gemini": "与 Gemini 一起构建",
+    "Try Gemini": "尝试 Gemini",
+    "✦ Try Gemini": "✦ 尝试 Gemini",
+    "About Google DeepMind": "关于谷歌 DeepMind",
+    "Our mission is to build AI responsibly to benefit humanity": "我们的使命是负责任地构建人工智能以造福人类",
+    "Our vision": "我们的愿景",
+    "Our journey": "我们的旅程",
+    "We live in an exciting time when AI research and technology are delivering extraordinary advances.": "我们生活在一个激动人心的时代，人工智能研究和技术正在取得非凡的进步。",
+    "In the coming years, AI — and ultimately artificial general intelligence (AGI) — has the potential to drive one of the greatest transformations in history.": "未来几年，人工智能——最终是通用人工智能（AGI）——有潜力推动历史上最伟大的变革之一。",
+    "We are a team of scientists, engineers, ethicists and more, working to build the next generation of AI systems safely and responsibly.": "我们是一支由科学家、工程师、伦理学家等组成的团队，致力于安全、负责任地构建下一代人工智能系统。",
+    "By solving some of the hardest scientific and engineering challenges, we're working to create breakthrough technologies.": "通过解决当今时代一些最艰巨的科学和工程挑战，我们正在努力创造突破性技术。",
+  };
+
+  const MODE_CAPTIONS = {
+    follow: "译文跟随：原文保留，美拉德译文紧随其下",
+    replace: "译文替换：只显示译文，且译文=原文原生排版",
+    invert: "原文跟随：译文为主（原生样式），原文穿美拉德注释",
+  };
+
+  let currentMode = "follow";
+
+  function srgb(r,g,b){ return "rgb(" + r + ", " + g + ", " + b + ")"; }
+  function parseRgb(str) { const m = str.match(/\d+/g); return m ? { r:+m[0], g:+m[1], b:+m[2] } : null; }
+  function applyHostFontStyles(el, wrapper, scale) {
+    const cs = getComputedStyle(el);
+    const base = parseFloat(cs.fontSize) || 16;
+    wrapper.style.fontSize = (scale === 1 ? base : Math.max(12, base * scale)).toFixed(2) + "px";
+    wrapper.style.fontFamily = cs.fontFamily;
+    wrapper.style.fontWeight = cs.fontWeight;
+    wrapper.style.fontStyle = cs.fontStyle;
+    wrapper.style.lineHeight = cs.lineHeight;
+    wrapper.style.letterSpacing = cs.letterSpacing;
+    wrapper.style.textAlign = cs.textAlign;
+    wrapper.style.textTransform = cs.textTransform;
+    if (scale === 1) { wrapper.style.color = cs.color; } else { wrapper.style.color = ""; }
+  }
+
+  function renderAll(mode) {
+    // 清空旧译文
+    document.querySelectorAll("font.fanyi-lite-target").forEach((n) => n.remove());
+    document.querySelectorAll("[data-fy-p]").forEach((el) => {
+      // 还原 source span
+      const src = el.querySelector("span.fanyi-lite-source");
+      if (!src) return;
+    });
+
+    const invert = mode === "invert";
+    document.querySelectorAll("[data-fy-p]").forEach((el) => {
+      const src = el.querySelector(":scope > span.fanyi-lite-source");
+      if (!src) return;
+      const raw = src.textContent.replace(/&nbsp;/g, " ").trim();
+      const zh = PAIRS[raw];
+      if (!zh) return;
+
+      const wrapper = document.createElement("font");
+      wrapper.className = "fanyi-lite-target";
+      if (el.closest(".chip")) wrapper.classList.add("fy-btn-ctx");
+
+      const isDark = el.classList.contains("btn-dark") || el.classList.contains("chip.primary");
+      if (isDark && mode !== "replace" && mode !== "invert") wrapper.classList.add("fy-dark-ctx");
+
+      applyHostFontStyles(el, wrapper, mode === "follow" ? 0.92 : 1);
+      const inner = document.createElement("span");
+      inner.className = "fanyi-lite-inner";
+      inner.lang = "zh-CN";
+      inner.textContent = zh;
+      wrapper.appendChild(inner);
+
+      if (invert) src.before(wrapper); else src.after(wrapper);
+    });
+  }
+
+  function setMode(mode, btn) {
+    currentMode = mode;
+    document.documentElement.dataset.fyMode = mode;
+    document.querySelectorAll(".mode-btn").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("modeCaption").textContent = MODE_CAPTIONS[mode];
+    renderAll(mode);
+  }
+
+  // 初始渲染 follow
+  renderAll("follow");
+</script>
+
+</body>
+</html>

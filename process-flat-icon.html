@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Flat Icon Processor</title></head>
+<body>
+<pre id="payload" style="display:none">PENDING</pre>
+<script>
+// 美拉德纯色块 + 「译」字双态图标（满幅版）：
+//   未翻译态（inactive/icon）= 满幅琥珀色块 + 暖奶白「译」，撑满整个图标区域
+//   翻译态（active）        = 同款满幅色块 + 沿轮廓一圈流动彩虹渐变描边（全色谱 conic 环绕）
+const FONT_STACK = '"Microsoft YaHei", "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", sans-serif';
+const AMBER = "#b45309";   // 美拉德琥珀焦糖（style.css --fy-maillard-amber）
+const GLYPH = "#fdf8f2";   // 高透亮暖奶白（--fy-maillard-dark-text）
+// 流动彩虹：红→橙→黄→绿→天蓝→靛→紫→红，首尾同色保证环上无缝循环
+const RING_STOPS = [
+  "#ff5252", "#ff9800", "#ffd600", "#66bb6a",
+  "#29b6f6", "#5c6bc0", "#ab47bc", "#ff5252",
+];
+
+function roundedRectPath(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function makeRingGradient(ctx, size) {
+  if (ctx.createConicGradient) {
+    const g = ctx.createConicGradient(-Math.PI / 2, size / 2, size / 2);
+    RING_STOPS.forEach((col, i) => g.addColorStop(i / (RING_STOPS.length - 1), col));
+    return g;
+  }
+  const g = ctx.createLinearGradient(0, 0, size, size);
+  RING_STOPS.forEach((col, i) => g.addColorStop(i / (RING_STOPS.length - 1), col));
+  return g;
+}
+
+// 512 主画布：满幅纯色块 + 「译」（各尺寸由主画布高质量缩放，小字号字形更平滑）
+const M = 512;
+const master = document.createElement("canvas");
+master.width = M; master.height = M;
+{
+  const ctx = master.getContext("2d");
+  roundedRectPath(ctx, 0, 0, M, M, M * 0.22);
+  ctx.fillStyle = AMBER;
+  ctx.fill();
+  ctx.fillStyle = GLYPH;
+  ctx.font = "bold " + Math.round(M * 0.58) + "px " + FONT_STACK;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  // 同色描边增粗笔画：小尺寸（16px）下「译」字保持清晰可读
+  ctx.lineJoin = "round";
+  ctx.lineWidth = M * 0.016;
+  ctx.strokeStyle = GLYPH;
+  ctx.strokeText("译", M / 2, M / 2 + M * 0.03);
+  ctx.fillText("译", M / 2, M / 2 + M * 0.03);
+}
+
+function makeSize(size, withRing) {
+  const c = document.createElement("canvas");
+  c.width = size; c.height = size;
+  const ctx = c.getContext("2d");
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  // 满幅色块：撑满整个图标允许区域
+  ctx.drawImage(master, 0, 0, size, size);
+  if (withRing) {
+    // 流动彩虹外描边：沿圆角轮廓描一圈彩虹渐变带（外缘与图标边缘对齐）
+    const sw = Math.max(2, size * 0.10);
+    ctx.save();
+    roundedRectPath(
+      ctx,
+      sw / 2, sw / 2, size - sw, size - sw,
+      Math.max(1, size * 0.22 - sw / 2)
+    );
+    ctx.lineWidth = sw;
+    ctx.strokeStyle = makeRingGradient(ctx, size);
+    ctx.stroke();
+    ctx.restore();
+  }
+  return c.toDataURL("image/png");
+}
+
+const out = {};
+for (const size of [128, 48, 32, 16]) {
+  out["active-" + size] = makeSize(size, true);
+  out["inactive-" + size] = makeSize(size, false);
+  out["icon-" + size] = out["inactive-" + size]; // 默认未启用态
+}
+document.getElementById("payload").textContent = "DATA:" + JSON.stringify(out);
+document.title = "DONE";
+</script>
+</body>
+</html>

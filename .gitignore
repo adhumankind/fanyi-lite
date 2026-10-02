@@ -1,0 +1,27 @@
+# ===== 隐私与安全（绝不入库）=====
+# CRX 打包私钥与产物
+*.pem
+*.crx
+
+# 沉浸式翻译逆向调研材料（商业代码版权 + 含个人路径）
+ext/
+调研报告.md
+
+# 打包/发布产物（审核通过后本就公开，但无需入库）
+dist/*.zip
+
+# 调试图杂物（保留 store-*.png 与演示页）
+screenshots/_bug_*.png
+screenshots/_dbg_*.png
+screenshots/_min_css.png
+screenshots/dm-*.png
+screenshots/mode-*.png
+screenshots/maillard-render.png
+screenshots/icon-final.png
+screenshots/options-ui.png
+screenshots/popup-ui.png
+
+# 系统杂项
+node_modules/
+Thumbs.db
+.DS_Store

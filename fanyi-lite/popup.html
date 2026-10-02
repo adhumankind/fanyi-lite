@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>宇宙无敌超级霹雳便捷的网页翻译工具</title>
+  <style>
+    /* 美拉德暖色高级紧凑面板 */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 310px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+      background: #faf7f2;
+      color: #2e1d13;
+      padding: 16px 16px 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(180, 83, 9, 0.14);
+      margin-bottom: 14px;
+    }
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .logo-img {
+      width: 24px;
+      height: 24px;
+    }
+    .title-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2e1d13;
+      line-height: 1.25;
+      letter-spacing: 0.02em;
+    }
+    .author-badge {
+      font-size: 10px;
+      color: #92400e;
+      background: rgba(245, 158, 11, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* 快捷主按钮 */
+    .btn-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      color: #ffffff;
+      border: none;
+      padding: 11px 0;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(180, 83, 9, 0.28);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      margin-bottom: 14px;
+    }
+    .btn-toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(180, 83, 9, 0.38);
+    }
+    .btn-toggle:active {
+      transform: translateY(0);
+    }
+    /* 翻译进行中状态 */
+    .btn-toggle.state-running {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      animation: btn-pulse 1.4s ease-in-out infinite;
+      cursor: wait;
+    }
+    /* 已翻译状态（点击还原原文） */
+    .btn-toggle.state-translated {
+      background: linear-gradient(135deg, #475569 0%, #334155 100%);
+      box-shadow: 0 3px 10px rgba(51, 65, 85, 0.25);
+    }
+    .btn-toggle.state-translated:hover {
+      background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+      box-shadow: 0 5px 14px rgba(30, 41, 59, 0.35);
+    }
+    @keyframes btn-pulse {
+      0%, 100% { opacity: 0.9; filter: brightness(1); }
+      50% { opacity: 1; filter: brightness(1.15); box-shadow: 0 0 16px rgba(245, 158, 11, 0.5); }
+    }
+    .btn-toggle .hotkey-chip {
+      background: rgba(0, 0, 0, 0.22);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: normal;
+      letter-spacing: 0.02em;
+    }
+
+    /* 配置表单区 */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #78350f;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 7px;
+    }
+
+    /* 模式切换单选按钮组 */
+    .mode-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .mode-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      background: #ffffff;
+      border: 1px solid rgba(180, 83, 9, 0.14);
+      border-left: 3px solid transparent;
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .mode-option:hover {
+      border-color: #d97706;
+      background: #fdfbf7;
+    }
+    .mode-option.active {
+      border-color: #b45309;
+      border-left: 3px solid #b45309;
+      background: rgba(245, 158, 11, 0.08);
+    }
+    .mode-option input {
+      margin-top: 3px;
+      accent-color: #b45309;
+    }
+    .mode-texts {
+      display: flex;
+      flex-direction: column;
+    }
+    .mode-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #2e1d13;
+    }
+    .mode-desc {
+      font-size: 11px;
+      color: #785943;
+      margin-top: 1px;
+      line-height: 1.4;
+    }
+
+    /* 总是翻译开关行 */
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid rgba(180, 83, 9, 0.14);
+      border-radius: 6px;
+      padding: 9px 11px;
+      margin-bottom: 14px;
+    }
+    .switch-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .switch-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #2e1d13;
+    }
+    .switch-desc {
+      font-size: 11px;
+      color: #785943;
+    }
+    /* iOS 风格平滑切换滑块 */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 38px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      transition: .24s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .24s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider {
+      background-color: #b45309;
+    }
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+
+    /* 目标语言 + 行业 双列下拉 */
+    .select-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .select-item { display: flex; flex-direction: column; }
+    .auto-badge {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: #b45309;
+      background: rgba(245, 158, 11, 0.15);
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: 4px;
+      letter-spacing: 0;
+      text-transform: none;
+      vertical-align: 1px;
+    }
+    .maillard-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background: #ffffff url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23b45309' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 9px center;
+      border: 1px solid rgba(180, 83, 9, 0.22);
+      border-radius: 6px;
+      padding: 7px 26px 7px 9px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #2e1d13;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      width: 100%;
+    }
+    .maillard-select:hover { border-color: #d97706; }
+    .maillard-select:focus { outline: none; border-color: #b45309; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15); }
+    .industry-hint {
+      font-size: 10.5px;
+      color: #8c6f5c;
+      margin-bottom: 14px;
+      line-height: 1.45;
+    }
+
+    /* 底部操作与作者区域 */
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: #785943;
+      padding-top: 10px;
+      border-top: 1px solid rgba(180, 83, 9, 0.12);
+    }
+    .btn-link {
+      color: #b45309;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .btn-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo-title">
+      <img src="icons/active-48.png" class="logo-img" alt="logo">
+      <div class="title-text">宇宙无敌超级霹雳便捷<br>网页翻译工具</div>
+    </div>
+    <div class="author-badge">作者：阿帝</div>
+  </div>
+
+  <!-- 主开关大按钮 -->
+  <button id="btnToggle" class="btn-toggle">
+    <span id="btnToggleLabel">切换当前页面翻译</span>
+    <span class="hotkey-chip" id="hotkeyChip">Alt+1</span>
+  </button>
+
+  <!-- 显示模式设置 -->
+  <div class="section-label">翻译呈现模式</div>
+  <div class="mode-group">
+    <label class="mode-option" id="labelFollow">
+      <input type="radio" name="transMode" value="follow" checked>
+      <div class="mode-texts">
+        <span class="mode-name">译文跟随 (双语对照)</span>
+        <span class="mode-desc">原文在上，美拉德琥珀译文紧随其后</span>
+      </div>
+    </label>
+
+    <label class="mode-option" id="labelReplace">
+      <input type="radio" name="transMode" value="replace">
+      <div class="mode-texts">
+        <span class="mode-name">译文替换 (仅看译文)</span>
+        <span class="mode-desc">有译文的隐藏原文，无译文保留原貌</span>
+      </div>
+    </label>
+
+    <label class="mode-option" id="labelInvert">
+      <input type="radio" name="transMode" value="invert">
+      <div class="mode-texts">
+        <span class="mode-name">原文跟随 (译文主/原文辅)</span>
+        <span class="mode-desc">译文为主显文字，原文作为浅灰辅助弱化</span>
+      </div>
+    </label>
+  </div>
+
+  <!-- 目标语言与行业选择 -->
+  <div class="select-grid">
+    <div class="select-item">
+      <div class="section-label">目标语言</div>
+      <select id="selTargetLang" class="maillard-select">
+        <option value="zh-CN" selected>简体中文</option>
+        <option value="zh-TW">繁體中文</option>
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="ru">Русский</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
+    <div class="select-item">
+      <div class="section-label">翻译行业 <span id="industryAutoBadge" class="auto-badge" hidden>自动识别</span></div>
+      <select id="selIndustry" class="maillard-select">
+        <option value="auto" selected>自动识别</option>
+        <option value="general">通用场景</option>
+        <option value="tech">互联网/软件开发</option>
+        <option value="academic">学术/科研论文</option>
+        <option value="medical">医疗/生物医药</option>
+        <option value="legal">法律/合规</option>
+        <option value="finance">金融/财经</option>
+        <option value="ecommerce">电商/市场营销</option>
+        <option value="gaming">游戏/ACG</option>
+        <option value="industrial">机械/工业制造</option>
+      </select>
+    </div>
+  </div>
+  <div class="industry-hint" id="industryHint">已按当前站点自动匹配行业术语库</div>
+
+  <!-- 总是自动翻译开关 -->
+  <div class="switch-row">
+    <div class="switch-info">
+      <span class="switch-title">总是翻译所有网页</span>
+      <span class="switch-desc">默认关闭；开启后进入外文网页自动翻译</span>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="chkAutoTranslate">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="footer">
+    <a id="btnOptions" class="btn-link">🧰 更多设置</a>
+    <span id="footerVersion">· 阿帝出品</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
